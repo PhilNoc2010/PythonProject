@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam Key Exchange Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="container-md">
+    <h1>Steam Key Exchange</h1>
+    <h2>Welcome {{ session.user_name }}</h2>
+    {% with messages = get_flashed_messages %}
+        {% if messages %}
+            {% for message in messages() %}
+                <p class="text-bg-danger p-3"> {{ message }} </p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div>
+        <form action="/submit_key" method="post" class="d-flex flex-md-column p-3 gap-2 w-50">
+            <label for="submitted_key">Key I'm Submitting</label>
+            <input type="text" name="submitted_key" id="submitted_key" placeholder="abcde-12345-vwxyz">
+            <label for="game_name">Game Name</label>
+            <input type="text" name="game_name" id="game_name" placeholder="The Greatest Game Ever">
+            <label for="steam_page">Link to Steam Page</label>
+            <input type="text" name="steam_page" id="steam_page" placeholder="https://store.steampowered.com/app/1234567/theGreatestGameEver/">
+            <button>Submit Key</button>
+        </form>
+    </div>
+    <div>
+        <h2> Available Steam Keys</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    Steam Game
+                </th>
+                <th>
+                    Key
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+            {% for key in steam_keys %}
+            <tr>
+                <td><a href="{{ key.game.steam_page }}">{{ key.game.game_name }}</a></td>
+                <td>{{ key.steam_key }}</td>
+                <td>Click the Key to Redeem</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <form action="/logout">
+        <button>Log Out</button>
+    </form>
+</body>
+</html>
